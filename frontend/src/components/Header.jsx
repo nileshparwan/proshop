@@ -16,7 +16,6 @@ const Header = () => {
                   type='image/webp'
                   srcset={logo}
                   media='(min-width: 480px)'
-                  alt='Proshop'
                 />
                 <img height="50px" width="50px" src={logo} alt='Proshop' />
               </picture>
