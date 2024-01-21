@@ -11,13 +11,13 @@ const Header = () => {
         <Container>
           <LinkContainer to='/'>
             <Navbar.Brand>
-              <picture style={{ maxHeight: '50px', width: '50px' }}>
+              <picture>
                 <source
                   type='image/webp'
                   srcset={logo}
                   media='(min-width: 480px)'
                 />
-                <img height="50px" width="50px" src={logo} alt='Proshop' />
+                <img height='50px' width='50px' src={logo} alt='Proshop' />
               </picture>
               Proshop
             </Navbar.Brand>
