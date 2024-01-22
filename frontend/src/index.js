@@ -10,6 +10,7 @@ import './assets/styles/bootstrap.custom.css';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 const App = React.lazy(() => import('./App')); 
 const HomeScreen = React.lazy(() => import('./screens/HomeScreen')); 
+const ProductScreen = React.lazy(() => import('./screens/ProductScreen'));
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const router = createBrowserRouter([
@@ -23,6 +24,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<Spinner />}>
             <HomeScreen />
+          </Suspense>
+        )
+      },
+      {
+        path: '/product/:id',
+        element: (
+          <Suspense fallback={<Spinner />}>
+            <ProductScreen />
           </Suspense>
         )
       }
