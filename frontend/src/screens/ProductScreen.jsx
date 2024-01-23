@@ -1,15 +1,23 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap';
 import Rating from '../components/Rating';
-import products from '../products';
+// import products from '../products';
+import axios from 'axios';
 
 const ProductScreen = () => {
+  const [product, setProduct] = useState({});
   const { id: productId } = useParams();
-  const product = React.useMemo(
-    () => products.find((p) => p._id === productId),
-    [productId]
-  );
+  const fetchProduct = useCallback(async () => {
+    const result = await axios.get(`/api/products/${productId}`);
+    if(result){
+      setProduct(result.data);
+    }
+  }, [productId]);
+
+  useEffect(() => {
+    fetchProduct();
+  }, [fetchProduct]);
 
   return (
     <>
