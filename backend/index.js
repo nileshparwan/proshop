@@ -1,5 +1,6 @@
 import init from './server.js';
 import productRoutes from './routes/productRoutes.js';
+import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 const start = () => {
     const app = init();
@@ -10,8 +11,12 @@ const start = () => {
     app.get('/', (req, res) => {
         res.send('listening....');
     });
-    
+
+    // middleware
+    app.use(notFound);
+    app.use(errorHandler);
+
     app.listen(PORT, () => console.log('Server running on port:', PORT));
-}
+};
 
 start();
