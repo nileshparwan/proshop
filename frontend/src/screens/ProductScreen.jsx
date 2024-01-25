@@ -26,7 +26,14 @@ const ProductScreen = () => {
       </Link>
       <Row>
         <Col md={5}>
-          <Image height="100%" width="100%" src={product.image} alt={product.name} fluid />
+          <Image
+            height='100%'
+            width='100%'
+            src={product.image}
+            alt={product.name}
+            loading='lazy'
+            fluid
+          />
         </Col>
 
         <Col md={4}>
