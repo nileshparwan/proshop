@@ -4,7 +4,6 @@
   "description": "eCommerce website",
   "type": "module",
   "main": "index.js",
-  "proxy": "https://proshop-02qc.onrender.com",
   "scripts": {
     "start": "node backend/index.js",
     "server": "nodemon backend/index.js",
