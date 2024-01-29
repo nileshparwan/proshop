@@ -8,10 +8,6 @@ const start = () => {
 
     app.use('/api/products', productRoutes);
 
-    app.get('/', (req, res) => {
-        res.send('listening....');
-    });
-
     // middleware
     app.use(notFound);
     app.use(errorHandler);
