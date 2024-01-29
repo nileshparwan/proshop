@@ -3,13 +3,14 @@ import ReactDOM from 'react-dom/client';
 import {
   createBrowserRouter,
   RouterProvider
-} from 'react-router-dom'
+} from 'react-router-dom';
+import { Provider } from 'react-redux';
 import Spinner from './components/Spinner';
+import store from './store';
 import './assets/styles/index.css';
 import './assets/styles/bootstrap.custom.css';
-// import 'bootstrap/dist/css/bootstrap.min.css';
-const App = React.lazy(() => import('./App')); 
-const HomeScreen = React.lazy(() => import('./screens/HomeScreen')); 
+const App = React.lazy(() => import('./App'));
+const HomeScreen = React.lazy(() => import('./screens/HomeScreen'));
 const ProductScreen = React.lazy(() => import('./screens/ProductScreen'));
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -37,10 +38,12 @@ const router = createBrowserRouter([
       }
     ]
   }
-])
+]);
 
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );
