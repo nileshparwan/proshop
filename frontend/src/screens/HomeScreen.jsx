@@ -2,6 +2,7 @@ import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import Spinner from '../components/Spinner';
+
 const Product = React.lazy(() => import('../components/Product'));
 
 const HomeScreen = () => {
