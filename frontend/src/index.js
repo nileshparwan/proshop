@@ -1,17 +1,17 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {
   createBrowserRouter,
   RouterProvider
 } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import Spinner from './components/Spinner';
 import store from './store';
+import App from './App';
+import HomeScreen from './screens/HomeScreen';
+import ProductScreen from './screens/ProductScreen';
 import './assets/styles/index.css';
 import './assets/styles/bootstrap.custom.css';
-const App = React.lazy(() => import('./App'));
-const HomeScreen = React.lazy(() => import('./screens/HomeScreen'));
-const ProductScreen = React.lazy(() => import('./screens/ProductScreen'));
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const router = createBrowserRouter([
@@ -23,17 +23,13 @@ const router = createBrowserRouter([
         path: '/',
         index: true,
         element: (
-          <Suspense fallback={<Spinner />}>
             <HomeScreen />
-          </Suspense>
         )
       },
       {
         path: '/product/:id',
         element: (
-          <Suspense fallback={<Spinner />}>
             <ProductScreen />
-          </Suspense>
         )
       }
     ]
