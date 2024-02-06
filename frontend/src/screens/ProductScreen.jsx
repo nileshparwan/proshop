@@ -4,6 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import Rating from '../components/Rating';
 import Spinner from '../components/Spinner';
 import { useGetProductDetailsQuery } from '../slices/productsApiSlice.js';
+import Message from '../components/Message';
 
 const ProductScreen = () => {
   const { id: productId } = useParams();
@@ -22,9 +23,9 @@ const ProductScreen = () => {
         {isLoading ? (
           <Spinner />
         ) : error ? (
-          <div>
+          <Message>
             <div>{error?.data?.message || error.error}</div>
-          </div>
+          </Message>
         ) : (
           <>
             <Col md={5}>

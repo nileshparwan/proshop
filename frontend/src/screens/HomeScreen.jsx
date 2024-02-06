@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import Spinner from '../components/Spinner';
 import { useGetProductsQuery } from '../slices/productsApiSlice';
+import Message from '../components/Message';
 
 const Product = React.lazy(() => import('../components/Product'));
 
@@ -15,7 +16,9 @@ const HomeScreen = () => {
         {isLoading ? (
           <Spinner />
         ) : error ? (
-          <div>{error?.data?.message || error.error}</div>
+          <Message variant='danger'>
+            <div>{error?.data?.message || error.error}</div>
+          </Message>
         ) : (
           <Suspense fallback={<Spinner />}>
             {products &&
