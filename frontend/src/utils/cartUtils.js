@@ -2,17 +2,7 @@ export const addDecimals = (num) => {
     return (Math.round(num * 100) / 100).toFixed(2);
 }
 
-export const updateCart = (state, action) => {
-    const item = action.payload;
-    const existingItem = state.cartItems.find(x => x._id === item.id);
-
-    if (existingItem) {
-        state.cartItems = state.cartItems.map(x =>
-            x._id === existingItem._id ? item : x
-        );
-    } else {
-        state.cartItems = [...state.cartItems, item];
-    }
+export const updateCart = (state) => {
     // calculate item price
     state.itemPrice = addDecimals(
         state.cartItems.reduce((acc, item) => {
