@@ -9,6 +9,7 @@ import store from './store';
 import App from './App';
 import HomeScreen from './screens/HomeScreen';
 import ProductScreen from './screens/ProductScreen';
+import CartScreen from './screens/CartScreen';
 import './assets/styles/index.css';
 import './assets/styles/bootstrap.custom.css';
 
@@ -30,6 +31,12 @@ const router = createBrowserRouter([
         path: '/product/:id',
         element: (
             <ProductScreen />
+        )
+      },
+      {
+        path: '/cart',
+        element: (
+            <CartScreen />
         )
       }
     ]
