@@ -49,7 +49,12 @@ const registerUser = asyncHandler(async (req, res) => {
  * @access Private
  */
 const logoutUser = asyncHandler(async (req, res) => {
-    res.send('auth user');
+    res.cookie('jwt', '', {
+        httpOnly: true,
+        expiresIn: new Date(0)
+    }); 
+
+    res.status(200).json({ message: 'Logged out successfully' });
 });
 
 /**
