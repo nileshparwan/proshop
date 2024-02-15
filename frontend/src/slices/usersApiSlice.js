@@ -8,14 +8,11 @@ export const usersApiSlice = apiSlice.injectEndpoints({
                 url: `${USERS_URL}/auth`,
                 method: "POST",
                 body: data
-            }),
-            keepUnusedDataFor: 5
+            })
         })
     })
 });
 
-console.log(usersApiSlice);
-
 export const {
-    userLoginMutation
+    useLoginMutation
 } = usersApiSlice;
