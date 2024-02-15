@@ -10,9 +10,10 @@ import App from './App';
 import HomeScreen from './screens/HomeScreen';
 import ProductScreen from './screens/ProductScreen';
 import CartScreen from './screens/CartScreen';
+import LoginScreen from './screens/LoginScreen';
+import RegisterScreen from './screens/RegisterScreen';
 import './assets/styles/index.css';
 import './assets/styles/bootstrap.custom.css';
-import LoginScreen from './screens/LoginScreen';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -44,6 +45,12 @@ const router = createBrowserRouter([
         path: '/login',
         element: (
             <LoginScreen />
+        )
+      },
+      {
+        path: '/register',
+        element: (
+            <RegisterScreen />
         )
       }
     ]
