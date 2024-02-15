@@ -85,7 +85,18 @@ const logoutUser = asyncHandler(async (req, res) => {
  * @access Public
  */
 const getUserProfile = asyncHandler(async (req, res) => {
-    res.send('auth user');
+    const user = await User.findById(req.user._id);
+    if (user) {
+        res.status(200).json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin
+        });
+    } else {
+        res.status(400);
+        throw new Error('User not found');
+    }
 });
 
 /**
@@ -94,7 +105,39 @@ const getUserProfile = asyncHandler(async (req, res) => {
  * @access Private
  */
 const updateUserProfile = asyncHandler(async (req, res) => {
-    res.send('auth user');
+    const user = await User.findById(req.user._id);
+    const emailExists = await User.findOne({ email: req.body.email });
+
+    if (user) {
+        if (emailExists && req.body.email !== user.email) {
+            res.status(400);
+            throw new Error('Email exists');
+        }
+
+        if(req.body.name && req.body.name !== user.name) {
+            user.name = req.body.name;
+        }
+
+        if(req.body.email && req.body.email !== user.email) {
+            user.email = req.body.email;
+        }
+
+        if (req.body.password) {
+            user.password = req.body.password;
+        }
+
+        const updatedUser = await user.save();
+
+        res.status(200).json({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            isAdmin: updatedUser.isAdmin
+        });
+    } else {
+        res.status(400);
+        throw new Error('User not found');
+    }
 });
 
 /**
