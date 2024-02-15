@@ -9,9 +9,16 @@ import generateToken from '../utils/generateToken.js';
  * @access  Public
  */
 const authUser = asyncHandler(async (req, res) => {
+    let pwdIsValid;
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-    const pwdIsValid = await user.matchPassword(password);
+
+    try {
+        pwdIsValid = await user.matchPassword(password);
+    } catch (error) {
+        res.status(401);
+        throw new Error('Invalid email or password');
+    }
 
     if (user && pwdIsValid) {
         // set JWT as HTTP-Only cookie and token
