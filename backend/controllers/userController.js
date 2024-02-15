@@ -12,12 +12,12 @@ const authUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     const pwdIsValid = await user.matchPassword(password);
-    
+
     if (user && pwdIsValid) {
         // set JWT as HTTP-Only cookie and token
         generateToken(res, user._id);
-         
-        res.json({
+
+        res.status(200).json({
             _id: user._id,
             name: user.name,
             email: user.email,
@@ -47,7 +47,7 @@ const registerUser = asyncHandler(async (req, res) => {
         name,
         email,
         password
-    })
+    });
 
     if (user) {
         // set JWT as HTTP-Only cookie and token
@@ -58,10 +58,10 @@ const registerUser = asyncHandler(async (req, res) => {
             name: user.name,
             email: user.email,
             isAdmin: user.isAdmin
-        })
+        });
     } else {
         res.status(400);
-        throw new Error('Invalid user data')
+        throw new Error('Invalid user data');
     }
 });
 
@@ -74,7 +74,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     res.cookie('jwt', '', {
         httpOnly: true,
         expiresIn: new Date(0)
-    }); 
+    });
 
     res.status(200).json({ message: 'Logged out successfully' });
 });
