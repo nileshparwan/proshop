@@ -1,6 +1,7 @@
 import express from 'express';
 import dotEnv from 'dotenv';
 import connectDB from './config/db.js';
+import cookieParser from 'cookie-parser';
 
 export default () => {
     const app = express();
@@ -10,6 +11,7 @@ export default () => {
 
     // body parser middleware
     app.use(express.json());
+    app.use(cookieParser());
     app.use(express.urlencoded({ extended: true }));
 
     // mongo db connection
