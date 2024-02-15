@@ -12,6 +12,7 @@ import ProductScreen from './screens/ProductScreen';
 import CartScreen from './screens/CartScreen';
 import './assets/styles/index.css';
 import './assets/styles/bootstrap.custom.css';
+import LoginScreen from './screens/LoginScreen';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -37,6 +38,12 @@ const router = createBrowserRouter([
         path: '/cart',
         element: (
             <CartScreen />
+        )
+      },
+      {
+        path: '/login',
+        element: (
+            <LoginScreen />
         )
       }
     ]
