@@ -14,6 +14,7 @@ import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import './assets/styles/index.css';
 import './assets/styles/bootstrap.custom.css';
+import ShippingScreen from './screens/ShippingScreen';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -51,6 +52,12 @@ const router = createBrowserRouter([
         path: '/register',
         element: (
             <RegisterScreen />
+        )
+      },
+      {
+        path: '/shipping',
+        element: (
+            <ShippingScreen />
         )
       }
     ]
