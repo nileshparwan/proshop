@@ -19,6 +19,7 @@ const LoginScreen = React.lazy(() => import('./screens/LoginScreen'));
 const RegisterScreen = React.lazy(() => import('./screens/RegisterScreen'));
 const ShippingScreen = React.lazy(() => import('./screens/ShippingScreen'));
 const PrivateRoute = React.lazy(() => import('./screens/PrivateRoute'));
+const PaymentScreen = React.lazy(() => import('./screens/PaymentScreen'));
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -71,7 +72,23 @@ const router = createBrowserRouter(createRoutesFromElements(
     />
 
     <Route path='' element={<PrivateRoute />}>
-      <Route path='/shipping' element={<ShippingScreen />} />
+      <Route
+        path='/shipping'
+        element={
+          <React.Suspense fallback="loading...">
+            <ShippingScreen />
+          </React.Suspense>
+        }
+      />
+
+      <Route
+        path='/payment'
+        element={
+          <React.Suspense fallback="loading...">
+            <PaymentScreen />
+          </React.Suspense>
+        }
+      />
     </Route>
   </Route>
 ));
