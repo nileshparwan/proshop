@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import FormContainer from '../components/FormContainer';
 import { saveShippingAddress } from '../slices/cartSlice';
-import CheckoutSteps from './CheckoutSteps';
+import CheckoutSteps from '../components/CheckoutSteps';
 
 const ShippingScreen = () => {
   const cart = useSelector((state) => state.cart);
