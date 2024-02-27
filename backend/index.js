@@ -11,6 +11,7 @@ const start = () => {
     app.use('/api/products', productRoutes);
     app.use('/api/users', userRoutes);
     app.use('/api/orders', orderRoutes);
+    app.get('/api/config/paypal', (req, res)=> res.status(200).json({clientId: process.env.PAYPAL_CLIENT_ID}))
 
     // middleware
     app.use(notFound);

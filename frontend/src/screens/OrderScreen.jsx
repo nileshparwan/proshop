@@ -1,18 +1,80 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {Link, useParams} from 'react-router-dom';
+import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import {Row, Col, ListGroup, Image, Form, Button, Card, Badge} from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 import Message from '../components/Message';
-import { useGetOrderByIdQuery } from '../slices/orderApiSlice';
 import Spinner from '../components/Spinner';
-
+import { useGetOrderByIdQuery, useGetPayPalClientIdQuery, usePayOrderMutation } from '../slices/orderApiSlice';
 
 const OrderScreen = () => {
   const { id: orderId } = useParams();
   const { data: order, isLoading, error, refetch } = useGetOrderByIdQuery(orderId);
+  const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
+  const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
+  const {data: paypal, isLoading: loadingPaypal, error: errorPaypal} = useGetPayPalClientIdQuery();
+  const { userInfo } = useSelector((state) => state.auth);
   
-  const placeOrderHandler = () => {
-    
+  useEffect(() => {
+    if (!errorPaypal && !loadingPaypal && paypal.clientId) {
+      
+      const loadPayPalScript = async () => {
+        paypalDispatch({
+          type: 'resetOptions',
+          value: {
+            'client-id': paypal.clientId,
+            currency: 'USD'
+          }
+        });
+
+        paypalDispatch({ type: 'setLoadingStatus', value: 'pending' });
+      };
+
+      if (order && !order.isPaid) {
+        if (!window.paypal) {
+          loadPayPalScript();
+        }
+      }
+
+    }
+  }, [order, errorPaypal, loadingPaypal, paypal, paypalDispatch]);
+
+  const onApproveTest = async () => {
+    await payOrder({ orderId, details: { payer: {} } });
+    refetch();
+    toast.success('Payment successful');
   }
+
+  const createOrder = (data, actions) => {
+    return actions.order.create({
+      purchase_units: [
+        {
+          amount: {
+            value: order.totalPrice,
+          }
+        }
+      ]
+    }).then((orderId)=>{
+      return orderId
+    });
+  }
+
+  const onApprove = (data, actions) => {
+    return actions.order.capture().then(async (details)=>{
+      try {
+        await payOrder({orderId, details});
+        refetch();
+      } catch (error) {
+        toast.error(error?.data?.message || error?.message)
+      }
+    })
+  }
+
+  const onError = (err) => {
+    toast.error(err.message);
+  }
+
 
   return isLoading ? (
     <Spinner />
@@ -41,7 +103,7 @@ const OrderScreen = () => {
                 {order.shippingAddress.country}
               </p>
               {order.isDelivered ? (
-                <Badge variant='success'>
+                <Badge bg='success'>
                   Delivered on {order.deliveredAt}
                 </Badge>
               ) : (
@@ -57,7 +119,7 @@ const OrderScreen = () => {
               </p>
 
               {order.isPaid ? (
-                <Badge variant='success'>Paid on {order.paidAt}</Badge>
+                <Badge bg='success'>Paid on {order.paidAt}</Badge>
               ) : (
                 <Badge bg='danger'>Not Paid</Badge>
               )}
@@ -69,7 +131,7 @@ const OrderScreen = () => {
                 <ListGroup.Item key={index}>
                   <Row>
                     <Col md={1}>
-                      <Image src={item.image} alt={item.name} fluid rounded />
+                      <Image src={item.image} alt={item.name} loading='lazy' fluid rounded />
                     </Col>
 
                     <Col>
@@ -89,7 +151,7 @@ const OrderScreen = () => {
         <Col md={4}>
           <Card>
             <ListGroup variant='flush'>
-            <ListGroup.Item>
+              <ListGroup.Item>
                 <h2>Order Summary</h2>
               </ListGroup.Item>
 
@@ -127,18 +189,29 @@ const OrderScreen = () => {
                 </ListGroup.Item>
               )}
 
-              <ListGroup.Item>
-                <Button
-                  type='button'
-                  className='btn-block'
-                  disabled={order.orderItems.length === 0 || isLoading}
-                  onClick={placeOrderHandler}
-                >
-                  Place Order
-                </Button>
-
-                {isLoading && <Spinner />}
-              </ListGroup.Item>
+              {!order.isPaid && (
+                <ListGroup.Item>
+                  {isLoading || isPending ? (
+                    <Spinner />
+                  ) : (
+                    <div>
+                      {/* <Button
+                        onClick={onApproveTest}
+                        style={{ marginBottom: '10px' }}
+                      >
+                        Test Pay Order
+                      </Button> */}
+                      <div>
+                        <PayPalButtons
+                          createOrder={createOrder}
+                          onApprove={onApprove}
+                          onError={onError}
+                        ></PayPalButtons>
+                      </div>
+                    </div>
+                  )}
+                </ListGroup.Item>
+              )}
             </ListGroup>
           </Card>
         </Col>
