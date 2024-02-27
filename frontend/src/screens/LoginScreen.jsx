@@ -7,6 +7,7 @@ import Spinner from '../components/Spinner';
 import { toast } from 'react-toastify';
 import { useLoginMutation } from '../slices/usersApiSlice';
 import { setCredentials } from '../slices/authSlice';
+import { setSessionExpirationDate } from '../utils/userSessionExpiration';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ const LoginScreen = () => {
   const navigate = useNavigate();
 
   const [login, { isLoading }] = useLoginMutation();
-  const { userInfo } = useSelector((state) => state.auth); 
+  const { userInfo } = useSelector((state) => state.auth);
 
   const {search} = useLocation();
   const sp = new URLSearchParams(search);
@@ -33,6 +34,7 @@ const LoginScreen = () => {
         const res = await login({email, password}).unwrap();
         if (res) {
             dispatch(setCredentials({ ...res }));
+            setSessionExpirationDate();
             navigate(redirect);
         }
     } catch (error) {

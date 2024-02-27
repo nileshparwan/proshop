@@ -6,10 +6,11 @@ import { ToastContainer } from 'react-toastify';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import 'react-toastify/dist/ReactToastify.css';
+import UserSession from './components/HOC/UserSession';
 
 const App = () => {
   return (
-    <>
+    <UserSession>
       <Header />
       <main className='py-3'>
         <Container>
@@ -19,7 +20,7 @@ const App = () => {
       </main>
       <Footer />
       <ToastContainer />
-    </>
+    </UserSession>
   );
 }
 

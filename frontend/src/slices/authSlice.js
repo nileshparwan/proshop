@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { clearSessionCookies } from '../utils/userSessionExpiration';
 
 const userInfoLs = localStorage.getItem('userInfo');
 const initialState = {
@@ -15,6 +16,7 @@ const authSlice = createSlice({
         },
         logout: (state, action) => {
             state.userInfo = null;
+            clearSessionCookies();
             localStorage.removeItem('userInfo');
         }
     } 
