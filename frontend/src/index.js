@@ -19,11 +19,13 @@ const CartScreen = React.lazy(() => import('./screens/CartScreen'));
 const LoginScreen = React.lazy(() => import('./screens/LoginScreen'));
 const RegisterScreen = React.lazy(() => import('./screens/RegisterScreen'));
 const ShippingScreen = React.lazy(() => import('./screens/ShippingScreen'));
-const PrivateRoute = React.lazy(() => import('./screens/PrivateRoute'));
+const PrivateRoute = React.lazy(() => import('./components/routes/PrivateRoute'));
 const PaymentScreen = React.lazy(() => import('./screens/PaymentScreen'));
 const PlaceOrderScreen = React.lazy(() => import('./screens/PlaceOrderScreen'));
 const OrderScreen = React.lazy(() => import('./screens/OrderScreen'));
 const ProfileScreen = React.lazy(() => import('./screens/ProfileScreen'));
+// const OrderListScreen = React.lazy(() => import('./screens/admin/OrderListScreen'));
+// const AdminRoute = React.lazy(() => import('./components/routes/AdminRoute'));
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -32,95 +34,63 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route
       path="/"
       index={true}
-      element={
-        <React.Suspense fallback="loading...">
-          <HomeScreen />
-        </React.Suspense>
-      }
+      element={<HomeScreen />}
     />
 
     <Route
       path="/product/:id"
-      element={
-        <React.Suspense fallback="loading...">
-          <ProductScreen />
-        </React.Suspense>
-      }
+      element={<ProductScreen />}
     />
 
     <Route
       path="/cart"
-      element={
-        <React.Suspense fallback="loading...">
-          <CartScreen />
-        </React.Suspense>
-      }
+      element={<CartScreen />}
     />
 
     <Route
       path="/login"
-      element={
-        <React.Suspense fallback="loading...">
-          <LoginScreen />
-        </React.Suspense>
-      }
+      element={<LoginScreen />}
     />
 
     <Route
       path="/register"
-      element={
-        <React.Suspense fallback="loading...">
-          <RegisterScreen />
-        </React.Suspense>
-      }
+      element={<RegisterScreen />}
     />
 
     <Route path='' element={<PrivateRoute />}>
       <Route
         path='/shipping'
-        element={
-          <React.Suspense fallback="loading...">
-            <ShippingScreen />
-          </React.Suspense>
-        }
+        element={<ShippingScreen />}
       />
 
       <Route
         path='/payment'
-        element={
-          <React.Suspense fallback="loading...">
-            <PaymentScreen />
-          </React.Suspense>
-        }
+        element={<PaymentScreen />}
       />
 
       <Route
         path='/placeorder'
-        element={
-          <React.Suspense fallback="loading...">
-            <PlaceOrderScreen />
-          </React.Suspense>
-        }
+        element={<PlaceOrderScreen />}
       />
 
       <Route
         path='/order/:id'
-        element={
-          <React.Suspense fallback="loading...">
-            <OrderScreen />
-          </React.Suspense>
-        }
+        element={<OrderScreen />}
       />
 
       <Route
         path='/profile'
-        element={
-          <React.Suspense fallback="loading...">
-            <ProfileScreen />
-          </React.Suspense>
-        }
+        element={<ProfileScreen />}
       />
     </Route>
+
+    {/* admin */}
+    {/* <Route path='' element={<AdminRoute />}>
+      <Route
+        path='/admin/orderList'
+        element={<OrderListScreen />}
+      />
+    </Route> */}
   </Route>
 ));
 
@@ -128,7 +98,9 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <PayPalScriptProvider deferLoading={true}>
-        <RouterProvider router={router} />
+      <React.Suspense fallback={<div>Loading ...</div>}>
+          <RouterProvider router={router} />
+      </React.Suspense>
       </PayPalScriptProvider>
     </Provider>
   </React.StrictMode>
