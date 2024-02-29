@@ -1,20 +1,30 @@
 import React, { useEffect } from 'react';
 import {Link, useParams} from 'react-router-dom';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
-import {Row, Col, ListGroup, Image, Form, Button, Card, Badge} from 'react-bootstrap';
+import {
+  Row,
+  Col,
+  ListGroup,
+  Image,
+  Card,
+  Badge,
+  Button
+} from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Spinner from '../components/Spinner';
-import { useGetOrderByIdQuery, useGetPayPalClientIdQuery, usePayOrderMutation } from '../slices/orderApiSlice';
+import { useDeliverOrderMutation, useGetOrderByIdQuery, useGetPayPalClientIdQuery, useNotDeliverOrderMutation, usePayOrderMutation } from '../slices/orderApiSlice';
 
 const OrderScreen = () => {
   const { id: orderId } = useParams();
   const { data: order, isLoading, error, refetch } = useGetOrderByIdQuery(orderId);
-  const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
+  const [payOrder /*, { isLoading: loadingPay }*/] = usePayOrderMutation();
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
   const {data: paypal, isLoading: loadingPaypal, error: errorPaypal} = useGetPayPalClientIdQuery();
   const { userInfo } = useSelector((state) => state.auth);
+  const [deliverOrder, {isLoading: loadingDeliver}] = useDeliverOrderMutation();
+  const [notDeliverOrder, {isLoading: loadingNotDeliver}] = useNotDeliverOrderMutation();
   
   useEffect(() => {
     if (!errorPaypal && !loadingPaypal && paypal.clientId) {
@@ -40,11 +50,11 @@ const OrderScreen = () => {
     }
   }, [order, errorPaypal, loadingPaypal, paypal, paypalDispatch]);
 
-  const onApproveTest = async () => {
-    await payOrder({ orderId, details: { payer: {} } });
-    refetch();
-    toast.success('Payment successful');
-  }
+  // const onApproveTest = async () => {
+  //   await payOrder({ orderId, details: { payer: {} } });
+  //   refetch();
+  //   toast.success('Payment successful');
+  // }
 
   const createOrder = (data, actions) => {
     return actions.order.create({
@@ -73,6 +83,35 @@ const OrderScreen = () => {
 
   const onError = (err) => {
     toast.error(err.message);
+  }
+
+  const deliverOrderHandler = async () => {
+    try {
+      const res = await deliverOrder(orderId);
+      console.log(res);
+      if (res) {
+        refetch();
+        toast.success('Order delivered');
+      } else {
+        throw new Error('Please contact your admintrator');
+      }
+    } catch (error) {
+      toast.error(error?.data.message || error?.message);
+    }
+  }
+
+  const notDeliverOrderHandler = async () => {
+    try {
+      const res = await notDeliverOrder(orderId);
+      if (res) {
+        refetch();
+        toast.success('Order not delivered');
+      } else {
+        throw new Error('Please contact your admintrator');
+      }
+    } catch (error) {
+      toast.error(error?.data.message || error?.message);
+    }
   }
 
 
@@ -104,7 +143,7 @@ const OrderScreen = () => {
               </p>
               {order.isDelivered ? (
                 <Badge bg='success'>
-                  Delivered on {order.deliveredAt}
+                  Delivered on {order.deliveredAt.substring(0, 10)}
                 </Badge>
               ) : (
                 <Badge bg='danger'>Not Delivered</Badge>
@@ -119,7 +158,9 @@ const OrderScreen = () => {
               </p>
 
               {order.isPaid ? (
-                <Badge bg='success'>Paid on {order.paidAt}</Badge>
+                <Badge bg='success'>
+                  Paid on {order.paidAt.substring(0, 10)}
+                </Badge>
               ) : (
                 <Badge bg='danger'>Not Paid</Badge>
               )}
@@ -131,7 +172,13 @@ const OrderScreen = () => {
                 <ListGroup.Item key={index}>
                   <Row>
                     <Col md={1}>
-                      <Image src={item.image} alt={item.name} loading='lazy' fluid rounded />
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        loading='lazy'
+                        fluid
+                        rounded
+                      />
                     </Col>
 
                     <Col>
@@ -212,6 +259,38 @@ const OrderScreen = () => {
                   )}
                 </ListGroup.Item>
               )}
+
+              {(loadingDeliver || loadingNotDeliver) && <Spinner />}
+
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.isPaid &&
+                !order.isDelivered && (
+                  <ListGroup.Item>
+                    <Button
+                      type='button'
+                      className='btn btn-block'
+                      onClick={deliverOrderHandler}
+                    >
+                      Mark as delivered
+                    </Button>
+                  </ListGroup.Item>
+                )}
+
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.isPaid &&
+                order.isDelivered && (
+                  <ListGroup.Item>
+                    <Button
+                      type='button'
+                      className='btn btn-block'
+                      onClick={notDeliverOrderHandler}
+                    >
+                      Mark as not delivered
+                    </Button>
+                  </ListGroup.Item>
+                )}
             </ListGroup>
           </Card>
         </Col>
