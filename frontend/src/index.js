@@ -24,8 +24,8 @@ const PaymentScreen = React.lazy(() => import('./screens/PaymentScreen'));
 const PlaceOrderScreen = React.lazy(() => import('./screens/PlaceOrderScreen'));
 const OrderScreen = React.lazy(() => import('./screens/OrderScreen'));
 const ProfileScreen = React.lazy(() => import('./screens/ProfileScreen'));
-// const OrderListScreen = React.lazy(() => import('./screens/admin/OrderListScreen'));
-// const AdminRoute = React.lazy(() => import('./components/routes/AdminRoute'));
+const OrderListScreen = React.lazy(() => import('./screens/admin/OrderListScreen'));
+const AdminRoute = React.lazy(() => import('./components/routes/AdminRoute'));
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -85,12 +85,12 @@ const router = createBrowserRouter(createRoutesFromElements(
     </Route>
 
     {/* admin */}
-    {/* <Route path='' element={<AdminRoute />}>
+    <Route path='' element={<AdminRoute />}>
       <Route
         path='/admin/orderList'
         element={<OrderListScreen />}
       />
-    </Route> */}
+    </Route>
   </Route>
 ));
 
@@ -98,9 +98,9 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <PayPalScriptProvider deferLoading={true}>
-      <React.Suspense fallback={<div>Loading ...</div>}>
+        <React.Suspense fallback={<div>Loading ...</div>}>
           <RouterProvider router={router} />
-      </React.Suspense>
+        </React.Suspense>
       </PayPalScriptProvider>
     </Provider>
   </React.StrictMode>
