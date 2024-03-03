@@ -8,20 +8,19 @@ const protect = asyncHandler(async (req, res, next) => {
     // read token from cookie
     token = req.cookies.jwt;
 
-    if (token) {
-        try {
+    try {
+        if (token) {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             req.user = await User.findById(decoded.userId).select('-password');
             next();
+        } else {
+            res.status(401);
+            throw new Error('Not authorized, no token');
+        }
         } catch (error) {
-            console.log(error);
             throw new Error('Not authorized, token failed');
         }
-    } else {
-        res.status(401);
-        throw new Error('Not authorized, no token');
-    }
-});
+    });
 
 // admin middleware
 const admin = (req, res, next) => {
