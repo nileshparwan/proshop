@@ -88,7 +88,6 @@ const OrderScreen = () => {
   const deliverOrderHandler = async () => {
     try {
       const res = await deliverOrder(orderId);
-      console.log(res);
       if (res) {
         refetch();
         toast.success('Order delivered');
