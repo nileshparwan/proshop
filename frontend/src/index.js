@@ -26,6 +26,7 @@ const OrderScreen = React.lazy(() => import('./screens/OrderScreen'));
 const ProfileScreen = React.lazy(() => import('./screens/ProfileScreen'));
 const OrderListScreen = React.lazy(() => import('./screens/admin/OrderListScreen'));
 const ProductListScreen = React.lazy(() => import('./screens/admin/ProductListScreen'));
+const ProductEditScreen = React.lazy(() => import('./screens/admin/ProductEditScreen'));
 const AdminRoute = React.lazy(() => import('./components/routes/AdminRoute'));
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -92,9 +93,14 @@ const router = createBrowserRouter(createRoutesFromElements(
         element={<OrderListScreen />}
       />
 
-<Route
+      <Route
         path='/admin/productList'
         element={<ProductListScreen />}
+      />
+
+      <Route
+        path='/admin/product/:id/edit'
+        element={<ProductEditScreen />}
       />
     </Route>
   </Route>

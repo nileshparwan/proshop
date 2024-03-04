@@ -27,7 +27,38 @@ const getProductById = asyncHandler(async (req, res) => {
     return res.json(product);
 });
 
+/**
+ * @desc update a product
+ * @route PUT /api/products/:id
+ * @access Public
+ */
+const updateProduct = asyncHandler(async (req, res) => {
+    const product = await Product.findById(req.params.id);
+
+    if(!product) {
+        res.status(404);
+        throw new Error('Resource not found');
+    }
+    
+    const updatedProduct = await Product.findOneAndUpdate(product._id, {
+        $set: {
+            name: req.body.name,
+            description: req.body.description,
+            brand: req.body.brand,
+            category: req.body.category,
+            price: req.body.price,
+            countInStock: req.body.countInStock,
+            numReviews: req.body.numReviews,
+        }
+    }, {
+        new: true
+    });
+
+    res.json(updatedProduct);
+});
+
 export {
     getProducts,
+    updateProduct,
     getProductById
 };
