@@ -16,7 +16,6 @@ const ProductEditScreen = () => {
   const {
     data: product,
     isLoading,
-    refetch,
     error
   } = useGetProductDetailsQuery(productId);
 
@@ -59,7 +58,6 @@ const ProductEditScreen = () => {
     if (result.error) {
       toast.error(result.error.data.message);
     } else {
-      // refetch();
       toast.success('Product updated');
       navigate('/admin/productList');
     }
