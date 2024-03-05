@@ -1,5 +1,5 @@
+import path from 'path';
 import dotEnv from 'dotenv';
-// import path, { dirname } from 'path';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import connectDB from './config/db.js';
@@ -14,6 +14,10 @@ export default () => {
     app.use(express.json());
     app.use(cookieParser());
     app.use(express.urlencoded({ extended: true }));
+
+    // set __dirname to current directory
+    const __dirname = path.resolve();
+    app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
     
     // // List of allowed domains
     // const allowedOrigins = ['https://proshops.vercel.app/', 'http://localhost:3000/'];
