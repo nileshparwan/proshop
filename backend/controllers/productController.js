@@ -79,11 +79,28 @@ const createProduct = asyncHandler(async (req, res) => {
 
     const createdProduct = await product.save();
     return res.status(201).json(createdProduct)
+})
+
+/*
+ * @desc remove a product
+ * @route DELTE /api/products/:id
+ * @access Private/admin
+ */
+const deleteProduct = asyncHandler(async (req, res) => {
+   const product = await Product.findById(req.params.id);
+   if(product){
+       await Product.deleteOne({ _id: product._id });
+       res.status(200).json({ message: 'Product deleted' })
+   } else {
+       res.status(404);
+       throw new Error('Resource not found');
+   }
 });
 
 export {
     getProducts,
     updateProduct,
     createProduct,
+    deleteProduct,
     getProductById,
 };

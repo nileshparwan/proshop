@@ -4,25 +4,39 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import Spinner from '../../components/Spinner';
 import Message from '../../components/Message';
-import { useCreateProductMutation, useGetProductsQuery } from '../../slices/productsApiSlice';
+import { useCreateProductMutation, useDeleteProductMutation, useGetProductsQuery } from '../../slices/productsApiSlice';
 import { LinkContainer } from 'react-router-bootstrap';
 
 const ProductListScreen = () => {
-  const { data: products, isLoading, error, refetch } = useGetProductsQuery();
+  const { data: products, isLoading, error } = useGetProductsQuery();
   const [createProduct, {isLoading: isCreateProductLoading}] = useCreateProductMutation();
+  const [deleteProduct, {isLoading: isDeleteProductLoading}] = useDeleteProductMutation(); 
 
   const createProductHandler = async () => {
     if(window.confirm('Are you sure you want to create a new product')) {
       try {
         await createProduct();
-        refetch();
       } catch (error) {
         toast.error(error.data.message || error.message);
       }
     }
   }
 
-  const deleteProductHandler = (id) => {};
+  const deleteProductHandler = async (e, id) => {
+    e.preventDefault();
+    if (window.confirm('Are you sure you want to create a new product')) {
+      try {
+        const res = await deleteProduct(id);
+        if (res.error) {
+          toast.error(res.error.data.message);
+        } else {
+          toast.error('Product deleted');
+        }
+      } catch (error) {
+        toast.error(error?.data.message || error.message);
+      }
+    }
+  };
 
   return (
     <>
@@ -36,18 +50,24 @@ const ProductListScreen = () => {
             className='btn-sm m-3 bg-black'
             onClick={createProductHandler}
           >
-            <FaEdit /> Create Product
+            {isCreateProductLoading? '...Loading' : (<><FaEdit /> Create Product</>)}
           </Button>
         </Col>
       </Row>
 
-      {isLoading || isCreateProductLoading ? (
-        <Spinner />
-      ) : error ? (
+      {isLoading && <Spinner />}
+
+      {error ? (
         <Message variant='danger'>{error}</Message>
       ) : (
         <>
-          <Table striped hover responsive className='table-sm'>
+          <Table
+            striped
+            hover
+            responsive
+            hidden={isLoading}
+            className='table-sm'
+          >
             <thead>
               <tr>
                 <th>ID</th>
@@ -77,7 +97,10 @@ const ProductListScreen = () => {
                     <Button
                       variant='danger'
                       className='btn-sm mx-1'
-                      onClick={() => deleteProductHandler(product._id)}
+                      onClick={(e) =>
+                        !isDeleteProductLoading &&
+                        deleteProductHandler(e, product._id)
+                      }
                     >
                       <FaTrash style={{ color: 'white' }} />
                     </Button>

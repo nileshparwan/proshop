@@ -46,6 +46,13 @@ export const productsApiSlice = apiSlice.injectEndpoints({
             // it will prevent it from being cached so that we have fresh data
             // if we do not add this, we will have to reload the page
             invalidatesTags: ['Product'],
+        }),
+        deleteProduct: builder.mutation({
+            query: (id) => ({
+                url: `${PRODUCT_URL}/${id}`,
+                method: 'DELETE'
+            }),
+            invalidatesTags: ['Product']
         })
     })
 });
@@ -53,6 +60,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
 export const {
     useGetProductsQuery,
     useCreateProductMutation,
+    useDeleteProductMutation,
     useUpdateProductMutation,
     useGetProductDetailsQuery,
     useUploadProductImageMutation,
