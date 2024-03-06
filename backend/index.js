@@ -20,23 +20,12 @@ const start = () => {
     app.use(notFound);
     app.use(errorHandler);
 
-    // List of allowed domains
-    const allowedOrigins = [
-        'https://proshops.vercel.app/',
-        'http://localhost:3000/'
-    ];
     // Middleware to disable CORS
     app.use((req, res, next) => {
-        const origin = req.headers.origin;
-
-        // Check if the request's origin is in the allowed list
-        if (allowedOrigins.includes(origin)) {
-            res.setHeader('Access-Control-Allow-Origin', origin);
-            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-            res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-            res.setHeader('Access-Control-Allow-Credentials', 'true');
-        }
-
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
+        res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Accept, Content-Type, Authorization');
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
         // Continue to the next middleware
         next();
     });
