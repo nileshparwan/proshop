@@ -1,23 +1,26 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Table, Button, Col, Row } from 'react-bootstrap';
-import { FaTimes, FaEdit, FaTrash } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { FaEdit, FaTrash } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 import Spinner from '../../components/Spinner';
 import Message from '../../components/Message';
-import { useGetProductsQuery } from '../../slices/productsApiSlice';
+import { useCreateProductMutation, useGetProductsQuery } from '../../slices/productsApiSlice';
 import { LinkContainer } from 'react-router-bootstrap';
 
 const ProductListScreen = () => {
-  const [customLoader, setCustomLoader] = useState(false);
   const { data: products, isLoading, error, refetch } = useGetProductsQuery();
+  const [createProduct, {isLoading: isCreateProductLoading}] = useCreateProductMutation();
 
-  const handleRefreshClick = () => {
-    setCustomLoader(true);
-    setTimeout(() => {
-      refetch();
-      setCustomLoader(false);
-    }, 2000);
-  };
+  const createProductHandler = async () => {
+    if(window.confirm('Are you sure you want to create a new product')) {
+      try {
+        await createProduct();
+        refetch();
+      } catch (error) {
+        toast.error(error.data.message || error.message);
+      }
+    }
+  }
 
   const deleteProductHandler = (id) => {};
 
@@ -29,13 +32,16 @@ const ProductListScreen = () => {
         </Col>
 
         <Col className='text-end'>
-          <Button className='btn-sm m-3 bg-black'>
+          <Button
+            className='btn-sm m-3 bg-black'
+            onClick={createProductHandler}
+          >
             <FaEdit /> Create Product
           </Button>
         </Col>
       </Row>
 
-      {isLoading ? (
+      {isLoading || isCreateProductLoading ? (
         <Spinner />
       ) : error ? (
         <Message variant='danger'>{error}</Message>
