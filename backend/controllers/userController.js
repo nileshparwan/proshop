@@ -153,7 +153,8 @@ const updateUserProfile = asyncHandler(async (req, res) => {
  * @access Private/Admin
  */
 const getUsers = asyncHandler(async (req, res) => {
-    res.send('auth user');
+    const users = await User.find({});
+    res.status(200).json(users);
 });
 
 /**
@@ -162,7 +163,13 @@ const getUsers = asyncHandler(async (req, res) => {
  * @access Private/Admin
  */
 const getUserById = asyncHandler(async (req, res) => {
-    res.send('auth user');
+    const user = await User.findById(req.params.id).select('-password');
+    if(user){
+        res.status(200).json(user);
+    } else {
+        res.status(404);
+        throw new Error('User not found');
+    }
 });
 
 /**
@@ -171,7 +178,17 @@ const getUserById = asyncHandler(async (req, res) => {
  * @access Private/Admin
  */
 const deleteUser = asyncHandler(async (req, res) => {
-    res.send('auth user');
+    const user = await User.findById(req.params.id).select('-password');
+    if (user) {
+        if(user.isAdmin){
+            res.status(400);
+            throw new Error('Cannot delete admin user');
+        }
+        await User.deleteOne({ _id: user._id });
+    } else {
+        res.status(404);
+        throw new Error('User not found');
+    }
 });
 
 /**
@@ -180,7 +197,26 @@ const deleteUser = asyncHandler(async (req, res) => {
  * @access Private/Admin
  */
 const updateUser = asyncHandler(async (req, res) => {
-    res.send('auth user');
+    const user = await User.findById(req.params.id).select('-password');
+    if (user) {
+        const updateUser = await User.updateOne(
+            {
+                _id: user._id
+            },
+            {
+                $set: {
+                    ...req.body
+                }
+            },
+            {
+                new: true
+            }
+        );
+        res.status(200).json(updateUser);
+    } else {
+        res.status(404);
+        throw new Error('User not found');
+    }
 });
 
 export {
