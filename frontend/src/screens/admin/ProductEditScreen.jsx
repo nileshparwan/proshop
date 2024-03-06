@@ -30,7 +30,7 @@ const ProductEditScreen = () => {
   const [description, setDescription] = useState('');
 
   const [updateProduct, { isLoading: isUpdateProductLoading }] = useUpdateProductMutation();
-  const [uploadProductImage, { isLoading: isUploadLoading }] = useUploadProductImageMutation();
+  const [uploadProductImage] = useUploadProductImageMutation();
   const [deleteProductImage] = useDeleteProductImageMutation();
 
   useEffect(() => {
