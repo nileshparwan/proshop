@@ -44,6 +44,7 @@ const updateProduct = asyncHandler(async (req, res) => {
         $set: {
             name: req.body.name,
             description: req.body.description,
+            image: req.body.image,
             brand: req.body.brand,
             category: req.body.category,
             price: req.body.price,

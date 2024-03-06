@@ -1,6 +1,7 @@
 import path from 'path';
 import express from 'express';
 import multer from 'multer';
+import { existsSync, unlinkSync } from 'fs';
 const router = express.Router();
 
 const storage = multer.diskStorage({
@@ -24,14 +25,27 @@ const checkFileType = (file, cb) => {
 }
 
 const upload = multer({
-    storage
+    storage,
+    checkFileType
 });
 
-router.route('/').post(upload.single('image', (req, res) => {
-    res.send({
-        message: 'Image uploaded',
-        image: `/${req.file.path}`
-    });
-}));
+router.route('/').post(upload.single('image'), (req, res, next) => {
+    if (req.file.path) {
+        res.send({
+            message: 'Image uploaded',
+            image: `/${req.file.path}`
+        });
+    }
+});
+
+router.route('/:filename').delete((req, res) => {
+    const filename = req.params.filename;
+    const dirname = path.resolve();
+    const file = path.join(dirname, `/uploads/${filename}`)
+    if(existsSync(file)){
+        unlinkSync(file)
+    }
+    res.json({});
+}); 
 
 export default router;

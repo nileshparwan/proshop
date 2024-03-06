@@ -6,8 +6,10 @@ import Message from '../../components/Message';
 import Spinner from '../../components/Spinner';
 import FormContainer from '../../components/FormContainer';
 import {
+  useDeleteProductImageMutation,
   useGetProductDetailsQuery,
-  useUpdateProductMutation
+  useUpdateProductMutation,
+  useUploadProductImageMutation
 } from '../../slices/productsApiSlice';
 
 const ProductEditScreen = () => {
@@ -27,8 +29,9 @@ const ProductEditScreen = () => {
   const [countInStock, setCountInStock] = useState(0);
   const [description, setDescription] = useState('');
 
-  const [updateProduct, { isLoading: isUpdateProductLoading }] =
-    useUpdateProductMutation();
+  const [updateProduct, { isLoading: isUpdateProductLoading }] = useUpdateProductMutation();
+  const [uploadProductImage, { isLoading: isUploadLoading }] = useUploadProductImageMutation();
+  const [deleteProductImage] = useDeleteProductImageMutation();
 
   useEffect(() => {
     setName(product?.name || '');
@@ -46,7 +49,7 @@ const ProductEditScreen = () => {
       productId,
       name,
       price: parseFloat(price),
-      // image,
+      image,
       brand,
       category,
       countInStock,
@@ -54,7 +57,7 @@ const ProductEditScreen = () => {
     };
 
     const result = await updateProduct(update);
-    console.log(result);
+
     if (result.error) {
       toast.error(result.error.data.message);
     } else {
@@ -62,6 +65,23 @@ const ProductEditScreen = () => {
       navigate('/admin/productList');
     }
   };
+
+  const uploadFileHandler = async (e) => {
+    const formData = new FormData();
+    formData.append('image', e.target.files[0]);
+  
+    try {
+      const previousfile = image?.split('/')[2];
+      const res = await uploadProductImage(formData).unwrap();
+      if (res) {
+        await deleteProductImage(previousfile);
+        toast.success(res.message);
+        setImage(res.image);
+      }
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
+    }
+  }
 
   return (
     <>
@@ -95,6 +115,21 @@ const ProductEditScreen = () => {
                 value={price}
                 placeholder='Enter price'
                 onChange={(e) => setPrice(e.target.value)}
+              />
+            </Form.Group>
+
+            <Form.Group controlId='image'>
+              <Form.Label>Image</Form.Label>
+              <Form.Control
+                type='text'
+                value={image}
+                placeholder='Enter Image Url'
+                onChange={(e) => setImage(e.target.value)}
+              />
+              <Form.Control
+                type='file'
+                label="Chose file"
+                onChange={uploadFileHandler}
               />
             </Form.Group>
 
@@ -139,7 +174,9 @@ const ProductEditScreen = () => {
               />
             </Form.Group>
 
-            <Button type='submit' className='my-2 bg-black'>Update</Button>
+            <Button type='submit' className='my-2 bg-black'>
+              Update
+            </Button>
           </Form>
         )}
       </FormContainer>
