@@ -35,7 +35,7 @@ const Header = () => {
               <picture>
                 <source
                   type='image/webp'
-                  srcset={logo}
+                  srcSet={logo}
                   media='(min-width: 480px)'
                 />
                 <img height='50px' width='50px' src={logo} alt='Proshop' />
