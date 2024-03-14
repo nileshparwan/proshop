@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Table, Button } from 'react-bootstrap';
 import { FaTimes, FaTrash, FaEdit, FaCheck } from 'react-icons/fa';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -8,32 +8,38 @@ import Message from '../../components/Message';
 import { useDeleteUserMutation, useGetUsersQuery } from '../../slices/usersApiSlice';
 
 const UserListScreen = () => {
-  const { data: users, isLoading, error } = useGetUsersQuery();
+  const { data: users, isLoading, error, refetch } = useGetUsersQuery();
   const [deleteUser, { isLoading: deleteUserIsLoading }] = useDeleteUserMutation(); 
 
   const deleteHandler = async (id) => {
-    try {
-        const res = deleteUser(id);
-        if (res.error) {
-            toast.error(res.error.data.message);
-          } else {
-            toast.error('User deleted');
-          }
-        } catch (error) {
-          toast.error(error?.data.message || error.message);
-        }
-  }
+    if (window.confirm('Are you sure?')) {
+      try {
+        await deleteUser(id);
+        toast.error('User deleted');
+        refetch();
+      } catch (error) {
+        toast.error(error?.data.message || error.message);
+      }
+    }
+  };
 
   return (
     <>
       <h2>Users</h2>
-      {isLoading ? (
-        <Spinner />
-      ) : error ? (
+
+      {isLoading && <Spinner />}
+
+      {error ? (
         <Message variant='danger'>{error?.data.message || error.error}</Message>
       ) : (
         <>
-          <Table striped hover responsive className='table-sm'>
+          <Table
+            striped
+            hover
+            responsive
+            hidden={isLoading}
+            className='table-sm'
+          >
             <thead>
               <tr>
                 <th>ID</th>
@@ -74,7 +80,9 @@ const UserListScreen = () => {
                     <Button
                       variant='danger mx-1'
                       className='btn-sm'
-                      onClick={() => deleteHandler(user._id)}
+                      onClick={() =>
+                        !deleteUserIsLoading && deleteHandler(user._id)
+                      }
                     >
                       <FaTrash style={{ color: 'white' }} />
                     </Button>

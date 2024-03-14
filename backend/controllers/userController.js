@@ -178,13 +178,14 @@ const getUserById = asyncHandler(async (req, res) => {
  * @access Private/Admin
  */
 const deleteUser = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.params.id).select('-password');
+    const user = await User.findById(req.params.id);
     if (user) {
         if(user.isAdmin){
             res.status(400);
             throw new Error('Cannot delete admin user');
         }
         await User.deleteOne({ _id: user._id });
+        res.json({ message: 'User removed' });
     } else {
         res.status(404);
         throw new Error('User not found');
