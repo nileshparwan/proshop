@@ -27,6 +27,7 @@ const ProfileScreen = React.lazy(() => import('./screens/ProfileScreen'));
 const OrderListScreen = React.lazy(() => import('./screens/admin/OrderListScreen'));
 const ProductListScreen = React.lazy(() => import('./screens/admin/ProductListScreen'));
 const ProductEditScreen = React.lazy(() => import('./screens/admin/ProductEditScreen'));
+const UserListScreen = React.lazy(() => import('./screens/admin/UserListScreen'));
 const AdminRoute = React.lazy(() => import('./components/routes/AdminRoute'));
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -102,6 +103,11 @@ const router = createBrowserRouter(createRoutesFromElements(
         path='/admin/product/:id/edit'
         element={<ProductEditScreen />}
       />
+
+      <Route
+        path='/admin/userList'
+        element={<UserListScreen />}
+      />
     </Route>
   </Route>
 ));
@@ -110,7 +116,7 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <PayPalScriptProvider deferLoading={true}>
-        <React.Suspense fallback={<div>Loading ...</div>}>
+        <React.Suspense fallback={<></>}>
           <RouterProvider router={router} />
         </React.Suspense>
       </PayPalScriptProvider>
