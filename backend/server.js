@@ -25,6 +25,16 @@ export default () => {
     app.use(notFound);
     app.use(errorHandler);
 
+    // Middleware to disable CORS
+    app.use((req, res, next) => {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
+        res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Accept, Content-Type, Authorization');
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
+        // Continue to the next middleware
+        next();
+    });
+
     // mongo db connection
     connectDB();
 

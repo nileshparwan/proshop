@@ -11,10 +11,10 @@ const errorHandler = (error, req, res, next) => {
     console.error(error);
 
     // check for mongoose bad OnbjectId
-    // if(error.name === "CastError" && error.kind === 'ObjectId'){
-    //     message = 'Resource not found.';
-    //     statusCode = 404;
-    // }
+    if(error.name === "CastError" && error.kind === 'ObjectId'){
+        message = 'Resource not found.';
+        statusCode = 404;
+    }
 
     res.status(statusCode).json({
         message,
