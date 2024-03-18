@@ -3,6 +3,7 @@ import userRoutes from './routes/userRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
+import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 const start = () => {
     const app = init();
@@ -15,25 +16,19 @@ const start = () => {
     app.use('/api/upload', uploadRoutes);
     app.get('/api/config/paypal', (req, res)=> res.status(200).json({clientId: process.env.PAYPAL_CLIENT_ID}))
 
-    // CORS
-    // Middleware to enable CORS
+    // custom middleware
+    app.use(notFound);
+    app.use(errorHandler);
+
+    // Middleware to disable CORS
     app.use((req, res, next) => {
-        res.setHeader('Access-Control-Allow-Credentials', true);
         res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-        res.setHeader(
-            'Access-Control-Allow-Headers',
-            'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-        );
-        // Allow pre-flight requests
-        if (req.method === 'OPTIONS') {
-            res.sendStatus(200);
-        } else {
-            next();
-        }
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
+        res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Accept, Content-Type, Authorization');
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
+        // Continue to the next middleware
+        next();
     });
-
-
 
     app.listen(PORT, () => console.log('Server running on port:', PORT));
 };
