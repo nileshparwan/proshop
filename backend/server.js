@@ -3,6 +3,7 @@ import dotEnv from 'dotenv';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import connectDB from './config/db.js';
+import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 
 export default () => {
     const app = express();
@@ -17,20 +18,27 @@ export default () => {
 
     // set __dirname to current directory
     const __dirname = path.resolve();
+    console.log(__dirname);
     app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
-    // if (process.env.NODE_ENV === 'production') {
-    //     // set static folder
-    //     app.use(express.static(path.join(dirname('/frontend/build'))));
-    //     // any route that is not api will be redirected to index.html
-    //     app.get('*', (req, res) => {
-    //         res.sendFile(path.resolve(dirname('frontend', 'build', 'index.html')));
-    //     });
-    // } else {
-    //     app.get('/', (req, res) => {
-    //         res.send('API is running');
-    //     })
-    // }
+    // custom middleware
+    app.use(notFound);
+    app.use(errorHandler);
+
+    // CORS
+    // Middleware to enable CORS
+    app.use((req, res, next) => {
+        res.setHeader('Access-Control-Allow-Origin', 'https://proshops.vercel.app/'); // Replace with your frontend URL
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+        // Allow pre-flight requests
+        if (req.method === 'OPTIONS') {
+            res.sendStatus(200);
+        } else {
+            next();
+        }
+    });
 
     // mongo db connection
     connectDB();
