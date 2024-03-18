@@ -2,7 +2,7 @@
     "configurations": [
       {
         "name": "Run program debug mode",
-        "command": "nodemon backend/index.js", // To adapt with your way of running program
+        "command": "cd ./backend && nodemon index.js", // To adapt with your way of running program
         "request": "launch",
         "type": "node-terminal"
       }
