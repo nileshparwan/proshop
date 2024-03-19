@@ -1,4 +1,4 @@
-import cors from "cors";
+// import cors from "cors";
 import path from 'path';
 import dotEnv from 'dotenv';
 import express from 'express';
@@ -11,7 +11,8 @@ export default () => {
     // environment variable
     dotEnv.config();
 
-    app.use(cors({ origin: "*", credentials: true }))
+    // app.use(cors({ origin: "*", credentials: true }));
+
 
     // body parser middleware
     app.use(express.json());
@@ -22,6 +23,22 @@ export default () => {
     const __dirname = path.resolve();
     console.log(__dirname);
     app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+
+    app.use((req, res, next) => {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header(
+            "Access-Control-Allow-Headers",
+            "Origin, X-Requested, Content-Type, Accept Authorization"
+        );
+        if (req.method === "OPTIONS") {
+            res.header(
+                "Access-Control-Allow-Methods",
+                "POST, PUT, PATCH, GET, DELETE"
+            );
+            return res.status(200).json({});
+        }
+        next();
+    })
 
     // mongo db connection
     connectDB();
