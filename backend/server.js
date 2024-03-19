@@ -4,7 +4,6 @@ import dotEnv from 'dotenv';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import connectDB from './config/db.js';
-import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 
 export default () => {
     const app = express();
@@ -23,10 +22,6 @@ export default () => {
     const __dirname = path.resolve();
     console.log(__dirname);
     app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
-
-    // custom middleware
-    app.use(notFound);
-    app.use(errorHandler);
 
     // mongo db connection
     connectDB();
