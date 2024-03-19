@@ -12,7 +12,6 @@ const Product = ({ product }) => {
             height='100%'
             width='100%'
             variant='top'
-            loading='lazy'
             src={product.image}
             alt={product.name}
           />
