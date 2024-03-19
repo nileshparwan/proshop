@@ -11,6 +11,8 @@ export default () => {
     // environment variable
     dotEnv.config();
 
+    app.use(cors({ origin: "*", credentials: true }))
+
     // body parser middleware
     app.use(express.json());
     app.use(cookieParser());
