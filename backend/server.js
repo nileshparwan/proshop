@@ -25,12 +25,12 @@ export default () => {
     app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
     app.use((req, res, next) => {
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header(
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader(
             "Access-Control-Allow-Headers",
             "Origin, X-Requested, Content-Type, Accept Authorization"
         );
-        res.header(
+        res.setHeader(
             "Access-Control-Allow-Methods",
             "POST, PUT, PATCH, GET, DELETE"
         );
