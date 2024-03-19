@@ -14,7 +14,6 @@ const start = () => {
     app.use('/api/orders', orderRoutes);
     app.use('/api/upload', uploadRoutes);
     app.get('/api/config/paypal', (req, res)=> res.status(200).json({clientId: process.env.PAYPAL_CLIENT_ID}))
-
     app.listen(PORT, () => console.log('Server running on port:', PORT));
 };
 
