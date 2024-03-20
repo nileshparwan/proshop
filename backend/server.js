@@ -1,4 +1,3 @@
-// import cors from "cors";
 import path from 'path';
 import dotEnv from 'dotenv';
 import express from 'express';
@@ -11,9 +10,6 @@ export default () => {
     // environment variable
     dotEnv.config();
 
-    // app.use(cors({ origin: "*", credentials: true }));
-
-
     // body parser middleware
     app.use(express.json());
     app.use(cookieParser());
@@ -21,7 +17,6 @@ export default () => {
 
     // set __dirname to current directory
     const __dirname = path.resolve();
-    console.log(__dirname);
     app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
     app.use((req, res, next) => {
