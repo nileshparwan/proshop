@@ -9,8 +9,8 @@
     "server": "nodemon index.js",
     "client": "cd ../frontend && npm start",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "data:import": "node backend/seeder.js",
-    "data:destroy": "node backend/seeder.js -d",
+    "data:import": "node seeder.js",
+    "data:destroy": "node seeder.js -d",
     "devbuild": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "author": "koshal Parwan",
