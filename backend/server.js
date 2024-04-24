@@ -3,6 +3,7 @@ import dotEnv from 'dotenv';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import connectDB from './config/db.js';
+import cors from 'cors'
 
 export default () => {
     const app = express();
@@ -10,8 +11,16 @@ export default () => {
     // environment variable
     dotEnv.config();
 
+    // move build folder to backend
+    // use this line to run the application on backend localhost
+    // app.use(express.static('build'))
+    app.use(cors({
+        origin: true,
+        credentials: true
+    }));
     // body parser middleware
     app.use(express.json());
+    // to parse cookie
     app.use(cookieParser());
     app.use(express.urlencoded({ extended: true }));
 
@@ -20,14 +29,11 @@ export default () => {
     app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
     app.use((req, res, next) => {
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
         if (req.method === "OPTIONS") {
             return res.status(200).json({});
         }
         next();
-    })
+    });
 
     // mongo db connection
     connectDB();
