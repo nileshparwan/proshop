@@ -7,7 +7,7 @@ const generateToken = (res, userId) => {
     res.cookie('jwt', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV !== 'development',
-        sameSite: 'None',
+        sameSite: process.env.NODE_ENV !== 'development' ? 'None' : 'Strict',
         expires: new Date(Date.now() + 86400000), // Expires in 24 hours
         maxAge: 86400000 // Max age in milliseconds (24 hours)
     });
