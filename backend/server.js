@@ -14,16 +14,13 @@ export default () => {
     // move build folder to backend
     // use this line to run the application on backend localhost
     // app.use(express.static('build'))
+    
+    // cors
     app.use(cors({
-        origin: 'https://proshops.vercel.app',
-        credentials: true,
-        allowedHeaders: ['Content-Type', 'Authorization'],
-        methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
-        exposedHeaders: ['Content-Type', 'Authorization'],
-        maxAge: 86400,
-        preflightContinue: false,
-        optionsSuccessStatus: 204
+        origin: true,
+        credentials: true
     }));
+
     // body parser middleware
     app.use(express.json());
     // to parse cookie
