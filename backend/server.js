@@ -15,7 +15,7 @@ export default () => {
     // use this line to run the application on backend localhost
     // app.use(express.static('build'))
     app.use(cors({
-        origin: 'https://proshops.vercel.app/',
+        origin: 'https://proshops.vercel.app',
         credentials: true,
         allowedHeaders: ['Content-Type', 'Authorization'],
         methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
