@@ -82,7 +82,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     //     httpOnly: true,
     //     expiresIn: new Date(0)
     // });
-    res.clearCookie('jwt');
+    res.clearCookie('jwt', { path: '/' });
     res.status(200).json({ message: 'Logged out successfully' });
 });
 
