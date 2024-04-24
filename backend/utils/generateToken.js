@@ -5,12 +5,10 @@ const generateToken = (res, userId) => {
 
     // set JWT as HTTP-Only cookie
     res.cookie('jwt', token, {
-        path: '/',
         httpOnly: true,
-        sameSite: 'strict',
-        maxAge: 30 * 24 * 60 * 1000,
         secure: process.env.NODE_ENV !== 'development',
-        domain: process.env.NODE_ENV !== 'development' ? 'proshops.vercel.app' : 'localhost'
+        sameSite: 'strict',
+        maxAge: 30 * 24 * 60 * 1000
     });
 };
 
