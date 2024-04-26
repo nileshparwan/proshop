@@ -42,6 +42,11 @@ const router = createBrowserRouter(createRoutesFromElements(
     />
 
     <Route
+      path="/page/:pageNumber"
+      element={<HomeScreen />}
+    />
+
+    <Route
       path="/product/:id"
       element={<ProductScreen />}
     />
