@@ -1,4 +1,5 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import { Table, Button, Col, Row } from 'react-bootstrap';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { toast } from 'react-toastify';
@@ -6,9 +7,11 @@ import Spinner from '../../components/Spinner';
 import Message from '../../components/Message';
 import { useCreateProductMutation, useDeleteProductMutation, useGetProductsQuery } from '../../slices/productsApiSlice';
 import { LinkContainer } from 'react-router-bootstrap';
+import Paginate from '../../components/Paginate';
 
 const ProductListScreen = () => {
-  const { data: products, isLoading, error } = useGetProductsQuery();
+  const { pageNumber } = useParams();
+  const { data, isLoading, error } = useGetProductsQuery({ pageNumber });
   const [createProduct, {isLoading: isCreateProductLoading}] = useCreateProductMutation();
   const [deleteProduct, {isLoading: isDeleteProductLoading}] = useDeleteProductMutation(); 
 
@@ -50,7 +53,13 @@ const ProductListScreen = () => {
             className='btn-sm m-3 bg-black'
             onClick={createProductHandler}
           >
-            {isCreateProductLoading? '...Loading' : (<><FaEdit /> Create Product</>)}
+            {isCreateProductLoading ? (
+              '...Loading'
+            ) : (
+              <>
+                <FaEdit /> Create Product
+              </>
+            )}
           </Button>
         </Col>
       </Row>
@@ -79,7 +88,7 @@ const ProductListScreen = () => {
             </thead>
 
             <tbody>
-              {products?.map((product) => (
+              {data?.products.map((product) => (
                 <tr key={product._id}>
                   <td>{product._id}</td>
                   <td>{product.name}</td>
@@ -109,6 +118,7 @@ const ProductListScreen = () => {
               ))}
             </tbody>
           </Table>
+          {data && (<Paginate pages={data.pages} page={data.page} isAdmin={true} />)}
         </>
       )}
     </>

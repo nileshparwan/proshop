@@ -7,7 +7,7 @@ import Product from "../models/productModel.js";
  * @access Public
  */
 const getProducts = asyncHandler(async (req, res) => {
-    const pageSize = 3;
+    const pageSize = 4;
     const page = Number(req.query.pageNumber) || 1;
     const count = await Product.countDocuments();
     const products = await Product.find({}).limit(pageSize).skip(pageSize * (page - 1));
@@ -78,7 +78,6 @@ const createProduct = asyncHandler(async (req, res) => {
         numReviews: 0,
         description: 'Sample description'
     });
-    console.log('--->', product);
 
     const createdProduct = await product.save();
     return res.status(201).json(createdProduct)
