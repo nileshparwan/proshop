@@ -10,8 +10,8 @@ import { LinkContainer } from 'react-router-bootstrap';
 import Paginate from '../../components/Paginate';
 
 const ProductListScreen = () => {
-  const { pageNumber } = useParams();
-  const { data, isLoading, error } = useGetProductsQuery({ pageNumber });
+  const { pageNumber, keyword } = useParams();
+  const { data, isLoading, error } = useGetProductsQuery({ pageNumber, keyword });
   const [createProduct, {isLoading: isCreateProductLoading}] = useCreateProductMutation();
   const [deleteProduct, {isLoading: isDeleteProductLoading}] = useDeleteProductMutation(); 
 
