@@ -11,7 +11,6 @@ const Product = React.lazy(() => import('../components/Product'));
 
 const HomeScreen = () => {
   const { pageNumber, keyword } = useParams();
-  const productsRef = useRef(0);
   const [productIsLoaded, setProductIsLoaded] = useState(false);
   const { data, isLoading, error } = useGetProductsQuery({
     pageNumber,
@@ -45,7 +44,7 @@ const HomeScreen = () => {
             <h1> Latest Products</h1>
             <Suspense fallback={!data && <Spinner />}>
               {data.products && (
-                <Row ref={productsRef}>
+                <Row>
                   {data.products.map((product) => (
                     <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
                       <Product product={product} />
