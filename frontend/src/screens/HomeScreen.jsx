@@ -5,6 +5,7 @@ import Spinner from '../components/Spinner';
 import { useGetProductsQuery } from '../slices/productsApiSlice';
 import Message from '../components/Message';
 import Paginate from '../components/Paginate';
+import ProductCarousel from '../components/ProductCarousel';
 
 const Product = React.lazy(() => import('../components/Product'));
 
@@ -25,7 +26,9 @@ const HomeScreen = () => {
 
   return (
     <>
-      {keyword && (
+      {!keyword ? (
+        <ProductCarousel />
+      ) : (
         <Link to='/' className='btn btn-light mb-3'>
           Go Back
         </Link>
