@@ -95,7 +95,7 @@ const ProductEditScreen = () => {
         {isUpdateProductLoading || isLoading ? (
           <Spinner />
         ) : error ? (
-          <Message variant='danger'>{error}</Message>
+          <Message variant='danger'>{error.data.message}</Message>
         ) : (
           <Form onSubmit={submitHandler}>
             <Form.Group controlId='name'>

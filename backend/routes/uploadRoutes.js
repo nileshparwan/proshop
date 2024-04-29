@@ -6,36 +6,44 @@ const router = express.Router();
 
 const storage = multer.diskStorage({
     destination(req, file, cb) {
-        cb(null, 'uploads/')
+      cb(null, 'uploads/');
     },
     filename(req, file, cb) {
-        cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`)
-    }
-})
+      cb(
+        null,
+        `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
+      );
+    },
+  });
 
-const checkFileType = (file, cb) => {
-    const fileTypes = /jpg|jpeg|png/;
-    const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
-    const mimeType = fileTypes.test(file.mimetype);
-    if (extName && mimeType) {
-        return cb(null, true);
+function fileFilter(req, file, cb) {
+    const filetypes = /jpe?g|png|webp/;
+    const mimetypes = /image\/jpe?g|image\/png|image\/webp/;
+
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = mimetypes.test(file.mimetype);
+
+    if (extname && mimetype) {
+        cb(null, true);
     } else {
-        cb('Image only');
+        cb(new Error('Images only!'), false);
     }
 }
 
-const upload = multer({
-    storage,
-    checkFileType
-});
+const upload = multer({ storage, fileFilter });
+const uploadSingleImage = upload.single('image');
 
-router.route('/').post(upload.single('image'), (req, res, next) => {
-    if (req.file.path) {
-        res.send({
-            message: 'Image uploaded',
-            image: `/${req.file.path}`
+router.post('/', (req, res) => {
+    uploadSingleImage(req, res, (err) => {
+        if (err) {
+            return res.status(400).send({ message: err.message });
+        }
+
+        res.status(200).send({
+            message: 'Image uploaded successfully',
+            image: `/${req.file.path}`,
         });
-    }
+    });
 });
 
 router.route('/:filename').delete((req, res) => {
