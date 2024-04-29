@@ -90,7 +90,7 @@ const OrderScreen = () => {
   const onApprove = (data, actions) => {
     return actions.order.capture().then(async (details) => {
       try {
-        await payOrder({ orderId, details });
+        await payOrder({ orderId, details }).unwrap();
         refetch();
       } catch (error) {
         toast.error(error?.data?.message || error?.message);
