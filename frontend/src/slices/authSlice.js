@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { clearSessionCookies } from '../utils/userSessionExpiration';
 
 const userInfoLs = localStorage.getItem('userInfo');
 const initialState = {
@@ -13,11 +12,12 @@ const authSlice = createSlice({
         setCredentials: (state, action) => {
             state.userInfo = action.payload;
             localStorage.setItem('userInfo', JSON.stringify(action.payload));
+            const expirationTime = new Date().getTime() + 30 * 24 * 60 * 60 * 1000; // 30 days
+            localStorage.setItem('expirationTime', expirationTime);
         },
         logout: (state, action) => {
             state.userInfo = null;
-            clearSessionCookies();
-            localStorage.removeItem('userInfo');
+            localStorage.clear();
         }
     } 
 });

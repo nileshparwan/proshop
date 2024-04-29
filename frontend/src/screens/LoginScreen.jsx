@@ -7,7 +7,6 @@ import Spinner from '../components/Spinner';
 import { toast } from 'react-toastify';
 import { useLoginMutation } from '../slices/usersApiSlice';
 import { setCredentials } from '../slices/authSlice';
-import { setSessionExpirationDate } from '../utils/userSessionExpiration';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -34,7 +33,6 @@ const LoginScreen = () => {
         const res = await login({email, password}).unwrap();
         if (res) {
             dispatch(setCredentials({ ...res }));
-            setSessionExpirationDate();
             navigate(redirect);
         }
     } catch (error) {
