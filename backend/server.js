@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 import dotEnv from 'dotenv';
 import express from 'express';
 import cookieParser from 'cookie-parser';
